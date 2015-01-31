@@ -1,0 +1,24 @@
+{
+	"name": "bazo/feature-toggler",
+	"type": "library",
+	"description": "Feature toggling library for php ",
+	"keywords": ["features", "toggling"],
+	"homepage": "https://github.com/bazo/feature-toggler",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Martin Bažík",
+			"email": "martin@bazo.sk",
+			"homepage": "http://bazo.sk"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"require-dev": {
+		"nette/tester": "*"
+	},
+	"autoload": {
+		"psr-0": {"Bazo": "src/"}
+	}
+}
