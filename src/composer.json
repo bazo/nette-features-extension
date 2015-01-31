@@ -1,9 +1,9 @@
 {
-	"name": "bazo/feature-toggler",
+	"name": "bazo/nette-features-extension",
 	"type": "library",
-	"description": "Feature toggling library for php ",
-	"keywords": ["features", "toggling"],
-	"homepage": "https://github.com/bazo/feature-toggler",
+	"description": "Feature toggler extension for Nette Framewrok",
+	"keywords": ["features", "toggling", "nette"],
+	"homepage": "https://github.com/bazo/nette-features-extension",
 	"license": "MIT",
 	"authors": [
 		{
@@ -13,7 +13,9 @@
 		}
 	],
 	"require": {
-		"php": ">=5.4.0"
+		"php": ">=5.4.0",
+		"nette/di": "*",
+		"bazo/feature-toggler": "*"
 	},
 	"require-dev": {
 		"nette/tester": "*"
