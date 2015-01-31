@@ -48,15 +48,14 @@ class Panel extends Nette\Object implements IBarPanel
 	 */
 	public function getPanel()
 	{
-
-		dump($this->evaluatedFeatures);exit;
-
 		if (empty($this->evaluatedFeatures)) {
 			return NULL;
 		}
 
-dump($this->evaluatedFeatures);exit;
-
+		$evaluatedFeatures	 = $this->evaluatedFeatures;
+		$click				 = class_exists('\Tracy\Dumper') ? function ($o, $c = FALSE, $d = 4) {
+			return \Tracy\Dumper::toHtml($o, array('collapse' => $c, 'depth' => $d));
+		} : callback('\Tracy\Helpers::clickableDump');
 		ob_start();
 
 		require __DIR__ . '/panel.phtml';
@@ -71,8 +70,8 @@ dump($this->evaluatedFeatures);exit;
 	public function register(Toggler $toggler)
 	{
 		$this->toggler						 = $toggler;
-		$this->toggler->onFeatureEvaluated[] = function($feature, $context, $result) {
-			$this->evaluatedFeatures[$feature] = ['context' => $context, 'result' => $result];
+		$this->toggler->onFeatureEvaluated[] = function($feature, $context, $conditions, $result) {
+			$this->evaluatedFeatures[] = ['feature' => $feature, 'context' => $context, 'conditions' => $conditions, 'result' => $result];
 		};
 		Debugger::getBar()->addPanel($this);
 	}

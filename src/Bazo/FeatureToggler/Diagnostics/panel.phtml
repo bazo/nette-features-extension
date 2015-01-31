@@ -13,61 +13,48 @@
     #tracy-debug .nette-featuresPanel table th { text-align: right; }
 </style>
 
-<?php foreach ($evaluatedFeauters as $host => $queries): ?>
-<h1 class="nette-featuresPanel"><code><?php echo $esc($host) ?></code> - Queries: <?php echo $esc(count($queries)); ?>, time: <?php echo $esc($totalTime); ?> </h1>
-<div class="nette-inner tracy-inner nette-featuresPanel">
-	<?php foreach($queries as $query): ?>
-		<?php list($request, $response, $time) = $query; $info = $response ? $response->getTransferInfo() : array('url' => 'http://localhost:9200/'); $url = new \Nette\Http\Url($info['url']); ?>
-		<h2>
-			<code><?php echo $esc(strtoupper($request->getMethod())); ?> <?php echo $esc('/' . ltrim($url->path, '/')); ?></code>
-			<small><?php echo $esc(number_format($time * 1000, 2)); ?>ms</small>
-		</h2>
+<table>
+	<tr><th>Feature</th><th>Context</th><th>Result</th></tr>
+	<?php
+	foreach ($evaluatedFeatures as $data):
+		$feature	 = $data['feature'];
+		$context	 = $data['context'];
+		$result		 = $data['result'];
+		$conditions	 = $data['conditions'];
 
-		<table>
-			<?php if ($request->getData()) { $requestData = $extractData($request); ?><tr>
-				<th width="70"><a href="json:<?php echo $esc(\Nette\Utils\Json::encode($requestData)) ?>">Request:</th>
-				<td><?php echo $click($requestData, TRUE, 15); ?></td>
-			</tr><?php } ?>
+		$dump = [
+			$feature => [
+				'context'	 => $context,
+				'conditions' => $conditions,
+				'result'	 => $result,
+			]
+		];
+		?>
+		<tr>
+			<td><strong><?php echo $feature ?></strong></td>
+			<td>
+				<div class="nette-inner tracy-inner nette-featuresPanel">
+					<?php echo $click($context); ?>
+				</div>
+			</td>
+			<?php /*
+			<td>
+				<div class="nette-inner tracy-inner nette-featuresPanel">
+					<?php echo $click($dump); ?>
+				</div>
+			</td>
 
-			<?php if ($response && $response->isOk()) { $responseData = $extractData($response); ?>
-				<?php if (stripos($request->getPath(), '_search') !== FALSE) { ?>
-					<?php if (isset($responseData['took'])) { ?><tr>
-						<th width="70">Took:</th><td><?php echo $click($responseData['took']); ?></td>
-					</tr><?php } ?>
-
-					<?php if (isset($responseData['timed_out']) && $responseData['timed_out']) { ?><tr>
-						<th width="70">Timed&nbsp;out:</th><td>yes</td>
-					</tr><?php } ?>
-
-					<?php if (isset($responseData['_shards'])) { ?><tr>
-						<th width="70">Shards:</th><td>
-							total: <?php echo $esc($responseData['_shards']['total']); ?>,
-							successful: <?php echo $esc($responseData['_shards']['successful']); ?>,
-							failed: <?php echo $esc($responseData['_shards']['failed']); ?>
-						</td>
-					</tr><?php } ?>
-
-					<?php if (isset($responseData['hits'])) { ?>
-						<tr><th width="70">Total&nbsp;hits:</th><td><?php echo $click($responseData['hits']['total']); ?></td></tr>
-						<tr><th width="70">Max&nbsp;hit&nbsp;score:</th><td><?php echo $click($responseData['hits']['max_score']); ?></td></tr>
-						<tr><th width="70">Results:</th><td><?php echo $click($responseData['hits']['hits'], TRUE, 15); ?></td></tr>
-					<?php } ?>
-
-				<?php } else { ?>
-					<tr>
-						<th width="70">Response:</th>
-						<td><?php echo $click($response->getData(), TRUE, 15); ?></td>
-					</tr>
-				<?php } ?>
-
-			<?php } elseif (isset($query[3]) && $query[3] instanceof \Exception) { ?>
-				<tr>
-					<th width="70">Error:</th>
-					<td style="color:red"><?php echo $esc($query[3]->getMessage()); ?></td>
-				</tr>
-			<?php } ?>
-
-		</table>
+			<td>
+				<div class="nette-inner tracy-inner nette-featuresPanel">
+					<?php echo $click($conditions); ?>
+				</div>
+			</td>
+			 *  *
+			 */
+			?>
+			<td>
+				<strong><?php echo $result ? 'Active' : 'Disabled' ?></strong>
+			</td>
+		</tr>
 	<?php endforeach; ?>
-</div>
-<?php endforeach; ?>
+</table>

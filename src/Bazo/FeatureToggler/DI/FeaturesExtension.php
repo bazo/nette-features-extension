@@ -30,7 +30,7 @@ class FeaturesExtension extends CompilerExtension
 
 		if(is_null($config['backend'])) {
 			$toggler = $builder->addDefinition($this->prefix('toggler'))
-				->setClass(Toggler::class, [$config]);
+				->setClass(Toggler::class, [$config['features']]);
 		} else {
 			$toggler = $builder->addDefinition($this->prefix('toggler'))
 				->setClass(\Bazo\FeatureToggler\BackendDrivenToggler::class, [$config['backend']]);
