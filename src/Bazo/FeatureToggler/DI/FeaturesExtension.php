@@ -3,7 +3,10 @@
 namespace Bazo\FeatureToggler\DI;
 
 
+use Bazo\FeatureToggler\BackendDrivenToggler;
 use Bazo\FeatureToggler\Diagnostics\Panel;
+use Bazo\FeatureToggler\Latte\FeaturesMacros;
+use Bazo\FeatureToggler\TemplateHelpers;
 use Bazo\FeatureToggler\Toggler;
 use Nette\DI\CompilerExtension;
 
@@ -33,7 +36,7 @@ class FeaturesExtension extends CompilerExtension
 					->setClass(Toggler::class, [$config['features']]);
 		} else {
 			$toggler = $builder->addDefinition($this->prefix('toggler'))
-					->setClass(\Bazo\FeatureToggler\BackendDrivenToggler::class, [$config['backend']]);
+					->setClass(BackendDrivenToggler::class, [$config['backend']]);
 		}
 
 		foreach ($config['operators'] as $operator) {
@@ -48,11 +51,11 @@ class FeaturesExtension extends CompilerExtension
 		}
 
 		$builder->addDefinition($this->prefix('helpers'))
-				->setClass(\Bazo\FeatureToggler\TemplateHelpers::class);
+				->setClass(TemplateHelpers::class);
 
 
 		$builder->getDefinition('nette.latteFactory')
-				//->addSetup('?->onCompile[] = function($engine) { Kdyby\Translation\Latte\TranslateMacros::install($engine->getCompiler()); }', array('@self'))
+				->addSetup(sprintf('?->onCompile[] = function($engine) { %s::install($engine->getCompiler()); }', FeaturesMacros::class), ['@self'])
 				->addSetup('addFilter', ['enabled', [$this->prefix('@helpers'), 'enabled']])
 		;
 	}
