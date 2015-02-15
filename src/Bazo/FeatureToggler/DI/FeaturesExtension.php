@@ -46,6 +46,15 @@ class FeaturesExtension extends CompilerExtension
 
 			$toggler->addSetup($this->prefix('@panel') . '::register', ['@self']);
 		}
+
+		$builder->addDefinition($this->prefix('helpers'))
+				->setClass(\Bazo\FeatureToggler\TemplateHelpers::class);
+
+
+		$builder->getDefinition('nette.latteFactory')
+				//->addSetup('?->onCompile[] = function($engine) { Kdyby\Translation\Latte\TranslateMacros::install($engine->getCompiler()); }', array('@self'))
+				->addSetup('addFilter', ['enabled', [$this->prefix('@helpers'), 'enabled']])
+		;
 	}
 
 
