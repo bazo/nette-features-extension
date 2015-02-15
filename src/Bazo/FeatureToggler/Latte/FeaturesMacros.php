@@ -33,7 +33,7 @@ class FeaturesMacros extends MacroSet
 		if ($node->prefix === $node::PREFIX_TAG) {
 			return $writer->write($node->htmlNode->closing ? 'if (array_pop($_l->ifs)) {' : 'if ($_l->ifs[] = (%node.args)) {');
 		}
-		return $writer->write('if ($template->enabled(%node.args)) {');
+		return $writer->write('if ($template->enabled(%node.word, %node.array?)) {');
 	}
 
 
