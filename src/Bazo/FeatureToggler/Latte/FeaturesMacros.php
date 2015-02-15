@@ -2,6 +2,7 @@
 
 namespace Bazo\FeatureToggler\Latte;
 
+
 use Latte\CompileException;
 use Latte\Compiler;
 use Latte\MacroNode;
@@ -18,12 +19,13 @@ class FeaturesMacros extends MacroSet
 	{
 		$me = new static($compiler);
 		$me->addMacro('ifEnabled', array($me, 'macroIfEnabled'), array($me, 'macroEndIfEnabled'));
+		$me->addMacro('ifNotEnabled', array($me, 'macroIfNotEnabled'), array($me, 'macroEndIfEnabled'));
 		return $me;
 	}
 
 
 	/**
-	 * {if ...}
+	 * {ifEnabled ...}
 	 */
 	public function macroIfEnabled(MacroNode $node, PhpWriter $writer)
 	{
@@ -38,7 +40,7 @@ class FeaturesMacros extends MacroSet
 
 
 	/**
-	 * {/if ...}
+	 * {/ifEnabled ...}
 	 */
 	public function macroEndIfEnabled(MacroNode $node, PhpWriter $writer)
 	{
@@ -53,6 +55,21 @@ class FeaturesMacros extends MacroSet
 			);
 		}
 		return '}';
+	}
+
+
+	/**
+	 * {ifEnabled ...}
+	 */
+	public function macroIfNotEnabled(MacroNode $node, PhpWriter $writer)
+	{
+		if ($node->data->capture = ($node->args === '')) {
+			return 'ob_start()';
+		}
+		if ($node->prefix === $node::PREFIX_TAG) {
+			return $writer->write($node->htmlNode->closing ? 'if (array_pop($_l->ifs)) {' : 'if ($_l->ifs[] = (%node.args)) {');
+		}
+		return $writer->write('if (!$template->enabled(%node.word, %node.array?)) {');
 	}
 
 

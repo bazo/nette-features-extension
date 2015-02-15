@@ -1,103 +1,56 @@
-feature-toggler
+Nette Feature Toggler Extension
 ===============
 
 Feature toggling library for php
 
 usage:
 
-````
-$toggler = new Toggler($config);
-if($toggler->enabled('featureName')) {
-	...
-}
-````
-
-you can also pass context to toggler:
+register extension
 
 ````
-$toggler = new Toggler($config);
-
-$context = [
-	'userId' => 150,
-	'site' => 'sk'
-
-];
-//using only globals
-if($toggler->enabled('feature1')) { //true
-	...
-}
-
-or
-//using globals and local context
-if($toggler->enabled('feature1', $context)) { //true
-	...
-}
+extensions:
+	features: Bazo\FeatureToggler\DI\FeaturesExtension
 ````
 
-configuration:
-
-simple, with an array
-
+configure features, for more information see https://github.com/bazo/feature-toggler#feature-toggler
 ````
-$config = [
-		'globals' => [
-			'site'=> 'sk'
-		],
-		'feature1' => [
-			'conditions' => [
-				['field' => 'site', 'operator' => 'in', 'arg' => ['sk', 'cz']],
-				['field' => 'userId', 'operator' => '>', 'arg' => 140]
-		],
-		'paypal' => [
-			'conditions' => [
-				['field' => 'site', 'operator' => 'in', 'arg' => ['sk', 'cz', 'de', 'at']]
-			]
-		]
-];
-````
-
-or you can use use shorthand syntax for conditions, it's much cleaner and more readable
-````
-['site', 'in', ['sk', 'cz', 'de', 'at']]
+features:
+	features:
+		globals:
+			ip: %remoteIp%
+		analytics:
+			conditions:
+				- {ip, in, %remoteIps%}
+		zopim:
+			conditions:
+				- {ip, in, %remoteIps%}
+		facebook-like:
+			conditions:
+				- {ip, in, %remoteIps%}
+		login:
+			conditions:
+				- {ip, in, %allowedIps%}
+		registration:
+			conditions:
+				- {ip, in, %allowedIps%}
+		membership:
+			active: FALSE
 ````
 
-Operators:
-
-there's 4 built-in operators, that cannot be overriden:
-	> - value must be greater than arg
-	< - value must be lower than arg
-	= - value must be equal than arg
-	in - value must be in set of args
-
-You can also register custom operators. A custom operator must implement IOperator interface
+in latte you can use macros:
 ````
-$operator = new MyCustomOperator;
-$toggler->registerOperator($operator);
+{ifEnabled feature $context} or {ifEnabled feature [username => bazo]}
+feature is enabled
+{else}
+not enabled
+{/ifEnabled}
 ````
 
-you can also override the default operator sign
-
+or n-macros:
 ````
-$toggler->registerOperator($operator, 'myCustomSign');
-````
-
-then you write a condition like this
-
-````
-['field' => 'site', 'operator' => 'myCustomSign', 'arg' => [1, 2, 3, ...]]
+<div n:ifEnabled="feature $context">
+feature is enabled
+</div>
 ````
 
-Custom features backend:
-
-You can also a custom backend for storing features and their conditions, for example a database
-
-The backend needs to implement **IFeaturesBackend** interface which has one method: **getConfig()**
-
-then you use it like this
-
-````
-$backend = new MyRedisBackend(...);
-$toggler = new BackendDrivenToggler($backend)
-````
-
-enjoy!
+there's also the not enabled alternative ifNotEnabled
