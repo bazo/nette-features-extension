@@ -12,49 +12,50 @@
     #nette-debug .nette-featuresPanel table th,
     #tracy-debug .nette-featuresPanel table th { text-align: right; }
 </style>
+<div class="nette-inner tracy-inner">
+	<table>
+		<tr><th>Feature</th><th>Context</th><th>Result</th></tr>
+		<?php
+		foreach ($evaluatedFeatures as $data):
+			$feature	 = $data['feature'];
+			$context	 = $data['context'];
+			$result		 = $data['result'];
+			$conditions	 = $data['conditions'];
 
-<table>
-	<tr><th>Feature</th><th>Context</th><th>Result</th></tr>
-	<?php
-	foreach ($evaluatedFeatures as $data):
-		$feature	 = $data['feature'];
-		$context	 = $data['context'];
-		$result		 = $data['result'];
-		$conditions	 = $data['conditions'];
-
-		$dump = [
-			$feature => [
-				'context'	 => $context,
-				'conditions' => $conditions,
-				'result'	 => $result,
-			]
-		];
-		?>
-		<tr>
-			<td><strong><?php echo $feature ?></strong></td>
-			<td>
-				<div class="nette-inner tracy-inner nette-featuresPanel">
-					<?php echo $click($context); ?>
-				</div>
-			</td>
-			<?php /*
-			<td>
-				<div class="nette-inner tracy-inner nette-featuresPanel">
-					<?php echo $click($dump); ?>
-				</div>
-			</td>
-
-			<td>
-				<div class="nette-inner tracy-inner nette-featuresPanel">
-					<?php echo $click($conditions); ?>
-				</div>
-			</td>
-			 *  *
-			 */
+			$dump = [
+				$feature => [
+					'context'	 => $context,
+					'conditions' => $conditions,
+					'result'	 => $result,
+				]
+			];
 			?>
-			<td>
-				<strong><?php echo $result ? 'Active' : 'Disabled' ?></strong>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-</table>
+			<tr>
+				<td><strong><?php echo $feature ?></strong></td>
+				<td>
+					<div class="nette-inner tracy-inner nette-featuresPanel">
+						<?php echo $click($context); ?>
+					</div>
+				</td>
+				<?php /*
+				  <td>
+				  <div class="nette-inner tracy-inner nette-featuresPanel">
+				  <?php echo $click($dump); ?>
+				  </div>
+				  </td>
+
+				  <td>
+				  <div class="nette-inner tracy-inner nette-featuresPanel">
+				  <?php echo $click($conditions); ?>
+				  </div>
+				  </td>
+				 *  *
+				 */
+				?>
+				<td>
+					<strong><?php echo $result ? 'Active' : 'Disabled' ?></strong>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+	</table>
+</div>
