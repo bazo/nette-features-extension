@@ -53,7 +53,7 @@ class Panel extends Nette\Object implements IBarPanel
 		}
 
 		$evaluatedFeatures	 = $this->evaluatedFeatures;
-		$click				 = class_exists('\Tracy\Dumper') ? function ($o, $c = FALSE, $d = 4) {
+		$click				 = class_exists('\Tracy\Dumper') ? function ($o, $c = TRUE, $d = 4) {
 			return \Tracy\Dumper::toHtml($o, array('collapse' => $c, 'depth' => $d));
 		} : callback('\Tracy\Helpers::clickableDump');
 		ob_start();
