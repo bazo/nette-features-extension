@@ -20,16 +20,16 @@ class FeaturesExtension extends CompilerExtension
 	 * @var array
 	 */
 	public $defaults = [
-		'features'	 => [],
-		'debugger'	 => '%debugMode%',
-		'backend'	 => NULL,
-		'operators'	 => []
+		'features' => [],
+		'debugger' => '%debugMode%',
+		'backend' => NULL,
+		'operators' => []
 	];
 
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$config	 = $this->getConfig($this->defaults);
+		$config = $this->getConfig($this->defaults);
 
 		if (is_null($config['backend'])) {
 			$toggler = $builder->addDefinition($this->prefix('toggler'))
@@ -53,11 +53,12 @@ class FeaturesExtension extends CompilerExtension
 		$builder->addDefinition($this->prefix('helpers'))
 				->setClass(TemplateHelpers::class);
 
-
-		$builder->getDefinition('nette.latteFactory')
-				->addSetup(sprintf('?->onCompile[] = function($engine) { %s::install($engine->getCompiler()); }', FeaturesMacros::class), ['@self'])
-				->addSetup('addFilter', ['enabled', [$this->prefix('@helpers'), 'enabled']])
-		;
+		if ($builder->hasDefinition('nette.latteFactory')) {
+			$builder->getDefinition('nette.latteFactory')
+					->addSetup(sprintf('?->onCompile[] = function($engine) { %s::install($engine->getCompiler()); }', FeaturesMacros::class), ['@self'])
+					->addSetup('addFilter', ['enabled', [$this->prefix('@helpers'), 'enabled']])
+			;
+		}
 	}
 
 
