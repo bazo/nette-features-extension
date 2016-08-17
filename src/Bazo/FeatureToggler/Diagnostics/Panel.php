@@ -30,7 +30,7 @@ class Panel extends Nette\Object implements IBarPanel
 	 */
 	public function getTab()
 	{
-		$img = Html::el('img', ['height' => '18px'])
+		$img = Html::el('img', ['height' => 16, 'width' => 16])
 				->src('data:image/svg+xml;base64,' . base64_encode(file_get_contents(__DIR__ . '/logo.svg')));
 		$tab = Html::el('span')->title('Features')->add($img);
 
