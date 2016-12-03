@@ -32,14 +32,14 @@ class Panel extends Nette\Object implements IBarPanel
 	{
 		$img = Html::el('img', ['height' => 16, 'width' => 16])
 				->src('data:image/svg+xml;base64,' . base64_encode(file_get_contents(__DIR__ . '/logo.svg')));
-		$tab = Html::el('span')->title('Features')->add($img);
+		$tab = Html::el('span')->title('Features')->addHtml($img);
 
 		$features = $this->toggler->getFeatures();
 
 		$title = Html::el()->setText(sprintf('Features (%d)', count($features)));
 
 
-		return (string) $tab->add($title);
+		return (string) $tab->addHtml($title);
 	}
 
 
