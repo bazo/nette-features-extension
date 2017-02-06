@@ -29,7 +29,7 @@ class FeaturesExtension extends CompilerExtension
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults);
+		$config = $this->validateConfig($this->defaults, $this->config);
 
 		if (is_null($config['backend'])) {
 			$toggler = $builder->addDefinition($this->prefix('toggler'))
